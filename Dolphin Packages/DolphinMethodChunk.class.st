@@ -9,6 +9,7 @@ DolphinMethodChunk >> importFor: requestor logSource: aBoolean [
 
 	| packages |
 
+	contents := contents reject: [ :char | char = Character linefeed ].
 	super importFor: requestor logSource: aBoolean.
 	
 	packages := self packages.

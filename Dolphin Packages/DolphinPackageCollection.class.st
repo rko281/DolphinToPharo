@@ -10,6 +10,18 @@ Class {
 	#category : #'Dolphin Packages'
 }
 
+{ #category : #'class initialization' }
+DolphinPackageCollection class >> initialize [
+
+	self class environment at: #Package put: RPackage
+]
+
+{ #category : #'class initialization' }
+DolphinPackageCollection class >> uninitialize [
+
+	self class environment removeKey: #Package
+]
+
 { #category : #adding }
 DolphinPackageCollection >> add: anObject [
 

@@ -11,5 +11,6 @@ BaselineOfDolphinToPharo >> baseline: spec [
 		for: #common
 		do: [
 				spec
-					package: 'Dolphin Packages']
+					package: 'Dolphin Packages';
+					package: 'Wolphin']
 ]
