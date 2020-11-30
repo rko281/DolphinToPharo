@@ -9,7 +9,7 @@ ProtoObject class >> subclass: aSymbol instanceVariableNames: ivNames classVaria
 
 	| newClass |
 
-	newClass := self subclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames package: (CurrentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
+	newClass := self subclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames package: (RPackage currentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
 	
 	newClass class instanceVariableNames: civNames.
 	

@@ -5,7 +5,7 @@ Object class >> variableByteSubclass: aSymbol instanceVariableNames: ivNames cla
 
 	| newClass |
 
-	newClass := self variableByteSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames category: (CurrentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
+	newClass := self variableByteSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames category: (RPackage currentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
 	
 	newClass class instanceVariableNames: civNames.
 	
@@ -17,7 +17,7 @@ Object class >> variableSubclass: aSymbol instanceVariableNames: ivNames classVa
 
 	| newClass |
 
-	newClass := self variableSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames category: (CurrentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
+	newClass := self variableSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames category: (RPackage currentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
 	
 	newClass class instanceVariableNames: civNames.
 	

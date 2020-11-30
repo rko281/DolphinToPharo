@@ -9,7 +9,7 @@ DolphinMethodChunk >> importFor: requestor logSource: aBoolean [
 
 	| packages |
 
-	contents := contents reject: [ :char | char = Character linefeed ].
+	self sanitizeDolphinCode.
 	super importFor: requestor logSource: aBoolean.
 	
 	packages := self packages.
@@ -31,4 +31,24 @@ DolphinMethodChunk >> packages [
 			method origin isMeta
 				ifFalse: [ each includesSelector: originSelector ofClassName: method origin instanceSide originalName]
 				ifTrue: [ each includesSelector: originSelector ofMetaclassName: method origin instanceSide originalName]] 
+]
+
+{ #category : #importing }
+DolphinMethodChunk >> sanitizeDolphinCode [
+
+	"Remove line feed characters and double-hashes (##) - the latter turns static expressions into normal code"
+
+	| readStream writeStream |
+
+	readStream  := contents readStream.
+	writeStream := (contents class new: contents size) writeStream.
+	
+	[ readStream atEnd ] whileFalse: 
+		[| next |
+		[next := readStream next.
+		next = Character lf] whileTrue.
+		(next = $# and: [ readStream peek = $# ]) ifTrue: [ readStream next. next := readStream next ].
+		next isNil ifFalse: [ writeStream nextPut: next ]].
+
+	contents := writeStream contents
 ]

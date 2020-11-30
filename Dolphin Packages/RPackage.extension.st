@@ -9,7 +9,7 @@ RPackage >> basicComment: aString [
 { #category : #'*Dolphin Packages' }
 RPackage >> basicScriptAt: aSymbol put: aString [
 
-	"Not supported"
+	self propertyAt: aSymbol put: aString
 ]
 
 { #category : #'*Dolphin Packages' }
@@ -27,9 +27,41 @@ RPackage >> classNames [
 ]
 
 { #category : #'*Dolphin Packages' }
+RPackage class >> currentDolphinPackage [
+
+	"Stored in the properties of this package"
+	
+	^self dolphinPackages propertyAt: #currentDolphinPackage
+]
+
+{ #category : #'*Dolphin Packages' }
+RPackage class >> currentDolphinPackage: anRPackage [
+
+	"Store in the properties of this package"
+	
+	^self dolphinPackages propertyAt: #currentDolphinPackage put: anRPackage
+]
+
+{ #category : #'*Dolphin Packages' }
+RPackage class >> dolphinPackages [
+
+	"This actual package"
+
+	^self organizer packageNamed: 'Dolphin Packages'
+]
+
+{ #category : #'*Dolphin Packages' }
 RPackage >> globalAliases: aCollection [
 
 	"Not supported"
+]
+
+{ #category : #'*Dolphin Packages' }
+RPackage class >> manager [
+
+	"Dolphin compatibility - Package manager == RPackage organizer"
+
+	^self organizer
 ]
 
 { #category : #'*Dolphin Packages' }
@@ -43,9 +75,13 @@ RPackage >> methodNames [
 { #category : #'*Dolphin Packages' }
 RPackage class >> name: aString [
 
-	CurrentDolphinPackage := self named: aString.
-	CurrentDolphinPackage register.
-	^CurrentDolphinPackage
+	| dolphinPackage |
+	
+	dolphinPackage := self named: aString.
+	dolphinPackage register.
+
+	self currentDolphinPackage: dolphinPackage.
+	^dolphinPackage
 ]
 
 { #category : #'*Dolphin Packages' }
@@ -61,5 +97,11 @@ RPackage >> setManualPrerequisites: aCollection [
 { #category : #'*Dolphin Packages' }
 RPackage >> setPrerequisites: aCollection [
 
-	"Not supported"
+	aCollection do: 
+		[ :each || packageFilename | 
+		(self organizer includesPackageNamed: each) ifFalse: 
+			[packageFilename := each, '.pac'.
+			packageFilename asFileReference exists ifTrue: [ CodeImporter evaluateDolphinFileNamed: packageFilename] ]].
+
+	self class currentDolphinPackage: self 
 ]
