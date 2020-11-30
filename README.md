@@ -10,11 +10,11 @@ Metacello new
 ```
 
 ## To Use
-1. Copy your Dolphin Package (`.pac`) or fileout (`.cls` or `.st`) to your Pharo image directory
-2. Change the file extension to `.st`
-3. Open the File Browser in your Pharo image, select your Dolphin file and click Install
-4. Your Dolphin code should now be loaded. In the case of a package file, a Pharo package with the same name will have been created.
+1. Copy your Dolphin Package structure (`.pac`) or fileouts (`.cls` or `.st`) to your Pharo image directory
+2. Evaluate the expression `CodeImporter evaluateDolphinFileNamed: '<your file name>'`
+3. Your Dolphin code should now be loaded. In the case of a package file, a Pharo package with the same name will have been created.
 
 ## Notes
 1. This project includes the `Wolphin` package from [ReStoreForPharo](https://github.com/rko281/ReStoreForPharo) to implement basic Dolphin-Pharo compatibility necessary during code file-in. Your filed-in code may introduce its own dependency on this package.
-2. Loading this project overrides the normal Pharo file-in mechanism. To re-enable this, remove the method `ChunkFileFormatParser class>>new`
+2. Loading a package file will also load any specified Dolphin prerequisite packages provided their .pac file exists in the correct location relative to your Pharo image directory
+3. Dolphin static expressions ( `##(...)` ) are automatically rewritten, removing the `##`prefix and thus rendering them as regular Smalltalk expressions
