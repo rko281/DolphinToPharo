@@ -51,7 +51,7 @@ RPackage class >> dolphinPackages [
 
 	"This actual package"
 
-	^self organizer packageNamed: 'Dolphin Packages'
+	^self organizer packageNamed: 'Dolphin to Pharo'
 ]
 
 { #category : #'*Dolphin to Pharo' }
