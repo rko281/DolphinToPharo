@@ -4,6 +4,13 @@ Class {
 	#category : #'Dolphin to Pharo'
 }
 
+{ #category : #accessing }
+DolphinMethodChunk >> behaviorName: aBehaviorName [
+	"If the arguement is an alias first try to convert to the aliased name."
+	super behaviorName: aBehaviorName.
+	self class environment at: aBehaviorName ifPresent: [:behavior | behaviorName := behavior name ]
+]
+
 { #category : #importing }
 DolphinMethodChunk >> importFor: requestor logSource: aBoolean [
 
