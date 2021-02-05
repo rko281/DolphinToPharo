@@ -14,11 +14,11 @@ DolphinPackageMethodNames >> add: anAssociation [
 
 	(anAssociation key includes: Character space)
 	ifTrue: 
-			[className := anAssociation key readStream upTo: $ .
+			[className := (self class environment at: (anAssociation key readStream upTo: $ )) name.
 			 self package addSelector: anAssociation value ofMetaclassName: className ]
 	ifFalse: 
-			[className := anAssociation key.
-			 self package addSelector: anAssociation value ofClassName: anAssociation key ].
+			[className := (self class environment at: anAssociation key) name.
+			 self package addSelector: anAssociation value ofClassName: className ].
 		
 	self package organizer registerExtendingPackage: package forClassName: className
 ]

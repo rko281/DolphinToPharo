@@ -89,6 +89,7 @@ RPackage class >> name: aString [
 	
 	dolphinPackage := self named: aString.
 	self currentDolphinPackage: dolphinPackage.
+	dolphinPackage register.
 	^dolphinPackage
 ]
 
