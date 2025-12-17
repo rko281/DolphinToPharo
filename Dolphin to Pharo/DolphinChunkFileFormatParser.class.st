@@ -1,49 +1,48 @@
 Class {
-	#name : #DolphinChunkFileFormatParser,
-	#superclass : #ChunkFileFormatParser,
-	#category : #'Dolphin to Pharo'
+	#name : 'DolphinChunkFileFormatParser',
+	#superclass : 'ChunkFileFormatParser',
+	#category : 'Dolphin to Pharo',
+	#package : 'Dolphin to Pharo'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DolphinChunkFileFormatParser >> defaultMethodsForSelector [
 	^ #methodsFor
 ]
 
-{ #category : #'class factory' }
+{ #category : 'class factory' }
 DolphinChunkFileFormatParser >> methodChunkClass [
 	^ DolphinMethodChunk
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DolphinChunkFileFormatParser >> parseDolphinCategorization: methodsPreamble [
-	| behaviorName isMeta selector categories category |
+	| behaviorName isMeta selector |
 	behaviorName := methodsPreamble first.
 	isMeta := methodsPreamble second = self classSelector
 		or: [ methodsPreamble second = self classTraitSelector ].
-	selector := methodsPreamble last.
+	methodsPreamble last.
 
-	categories := OrderedCollection new.
-
-	[ 
-	category := readStream next trimBoth .
-	category notEmpty ]
-		whileTrue:
+	[selector := readStream next.
+	selector isEmpty] whileFalse:
+		[| categories category |
+		categories := OrderedCollection new.
+		[category := readStream next trimBoth .
+		category notEmpty ] whileTrue:
 			[ categories add: category ].
 		
-	categories isEmpty ifTrue: [ ^self ].
-	
-	category := categories detect: [  :each | (#('public' 'private') includes: each) not ] ifNone: [ categories first ].
-
-	self addDeclaration: (DolphinMethodCategoryChunk new behaviorName: behaviorName; isMeta: isMeta; selector: selector; category: category; yourself)
+		categories isEmpty ifFalse:
+			[ 	category := categories detect: [  :each | (#('public' 'private') includes: each) not ] ifNone: [ categories first ].
+			self addDeclaration: (DolphinMethodCategoryChunk new behaviorName: behaviorName; isMeta: isMeta; selector: selector; category: category; yourself)]]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DolphinChunkFileFormatParser >> parseDolphinClassCategorization: methodsPreamble [
 
 	[ readStream next trimBoth isEmpty] whileFalse
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DolphinChunkFileFormatParser >> parseMethodDeclarations: methodsPreamble [
 	| behaviorName isMeta category stamp methodSource |
 	"The method preable is an array with the following structure:
@@ -76,33 +75,35 @@ DolphinChunkFileFormatParser >> parseMethodDeclarations: methodsPreamble [
 						contents: methodSource
 						behaviorName: behaviorName asSymbol
 						isMeta: isMeta
-						category: category
+						protocol: category
 						stamp: stamp) ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 DolphinChunkFileFormatParser >> parseNextDeclaration [
+
 	| isMetadata nextChunk |
 	readStream skipSeparators.
-	readStream isNextStyleChunk
-		ifTrue:
-			[ 
-			self addDeclaration: (self styleChunkClass contents: readStream readUpToEndOfStyleChunk).
+	readStream isNextStyleChunk ifTrue: [
+			self addDeclaration:
+				(self styleChunkClass contents: readStream readUpToEndOfStyleChunk).
 			^ self ].
 	isMetadata := readStream isNextChunkMetaData.
 	nextChunk := readStream next.
 	isMetadata
-		ifFalse: [ self addDeclaration: (self doItChunkClass contents: nextChunk) ]
-		ifTrue:
-			[ 
-			| substrings |
-			substrings := nextChunk parseLiterals.
-			(substrings includes: self methodsForSelector asString)
-				ifTrue: [ ^ self parseMethodDeclarations: substrings ].
-			(substrings includes: self commentStampSelector asString)
-				ifTrue: [ ^ self parseCommentDeclaration: substrings ].
-			(substrings includes: self reorganizeSelector asString)
-				ifTrue: [ ^ self parseClassOrganization: substrings ] .
-			(substrings includes: 'categoriesFor:') ifTrue: [ ^self parseDolphinCategorization: substrings ].
-			(substrings includes: 'categoriesForClass') ifTrue: [ ^self parseDolphinClassCategorization: substrings ]  ]
+		ifFalse: [
+		self addDeclaration: (self doItChunkClass contents: nextChunk) ]
+		ifTrue: [
+				| substrings |
+				substrings := OCParser parseLiterals: nextChunk.
+				(substrings includes: self methodsForSelector asString) ifTrue: [
+					^ self parseMethodDeclarations: substrings ].
+				(substrings includes: self commentStampSelector asString) ifTrue: [
+					^ self parseCommentDeclaration: substrings ].
+				(substrings includes: self reorganizeSelector asString) ifTrue: [
+					^ self parseClassOrganization: substrings ].
+				(substrings includes: 'categoriesForMethods') ifTrue: [
+					^ self parseDolphinCategorization: substrings ].
+				(substrings includes: 'categoriesForClass') ifTrue: [
+					^ self parseDolphinClassCategorization: substrings ] ]
 ]

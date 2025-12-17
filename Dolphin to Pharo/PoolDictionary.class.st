@@ -1,14 +1,15 @@
 Class {
-	#name : #PoolDictionary,
-	#superclass : #Dictionary,
+	#name : 'PoolDictionary',
+	#superclass : 'Dictionary',
 	#instVars : [
 		'name',
 		'pool'
 	],
-	#category : #'Dolphin to Pharo'
+	#category : 'Dolphin to Pharo',
+	#package : 'Dolphin to Pharo'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PoolDictionary class >> named: aSymbol [
 
 	^self new
@@ -16,7 +17,7 @@ PoolDictionary class >> named: aSymbol [
 		yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PoolDictionary >> classVarsString [
 
 	| stream |
@@ -28,7 +29,7 @@ PoolDictionary >> classVarsString [
 	^stream contents
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PoolDictionary >> compilePoolInitializationMethod: aString [
 
 	| selector |
@@ -36,7 +37,7 @@ PoolDictionary >> compilePoolInitializationMethod: aString [
 	(pool class>>selector) protocol: 'pool initialization'
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PoolDictionary >> declareInitializerFor: aKey [
 
 	| stream |
@@ -50,7 +51,7 @@ PoolDictionary >> declareInitializerFor: aKey [
 	self compilePoolInitializationMethod: stream contents
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PoolDictionary >> declarePoolInitializer [
 
 	| stream selCount initCount |
@@ -78,24 +79,24 @@ PoolDictionary >> declarePoolInitializer [
 	self compilePoolInitializationMethod: ('initialize', stream contents)
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PoolDictionary >> isManifest [
 
 	^false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PoolDictionary >> name [
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PoolDictionary >> name: aSymbol [
 	pool := self class environment at: aSymbol.
 	name := aSymbol
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PoolDictionary >> shrink [ 
 
 	"Sent at end of pool declaration. Create the SharedPool class"

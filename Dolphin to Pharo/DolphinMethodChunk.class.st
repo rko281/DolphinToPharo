@@ -1,17 +1,18 @@
 Class {
-	#name : #DolphinMethodChunk,
-	#superclass : #MethodChunk,
-	#category : #'Dolphin to Pharo'
+	#name : 'DolphinMethodChunk',
+	#superclass : 'MethodChunk',
+	#category : 'Dolphin to Pharo',
+	#package : 'Dolphin to Pharo'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DolphinMethodChunk >> behaviorName: aBehaviorName [
 	"If the arguement is an alias first try to convert to the aliased name."
 	super behaviorName: aBehaviorName.
 	self class environment at: aBehaviorName ifPresent: [:behavior | behaviorName := behavior name ]
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 DolphinMethodChunk >> importFor: requestor logSource: aBoolean [
 
 	| packages |
@@ -24,7 +25,7 @@ DolphinMethodChunk >> importFor: requestor logSource: aBoolean [
 		[((packages detect: [  :each | each includesClassNamed: self behaviorName ]) definedSelectorsForClass: self targetClass) remove: self methodSelector]
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 DolphinMethodChunk >> packages [
 	| method originSelector |
 	"This method returns the package this method belongs to.  
@@ -40,7 +41,7 @@ DolphinMethodChunk >> packages [
 				ifTrue: [ each includesSelector: originSelector ofMetaclassName: method origin instanceSide originalName]] 
 ]
 
-{ #category : #importing }
+{ #category : 'importing' }
 DolphinMethodChunk >> sanitizeDolphinCode [
 
 	"Remove line feed characters and double-hashes (##) - the latter turns static expressions into normal code"

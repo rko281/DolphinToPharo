@@ -1,1 +1,1 @@
-Package { #name : #'Dolphin to Pharo' }
+Package { #name : 'Dolphin to Pharo' }

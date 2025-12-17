@@ -1,17 +1,20 @@
-Extension { #name : #ProtoObject }
+Extension { #name : 'ProtoObject' }
 
-{ #category : #'*Dolphin to Pharo' }
+{ #category : '*Dolphin to Pharo' }
 ProtoObject class >> guid: aGUID [
 ]
 
-{ #category : #'*Dolphin to Pharo' }
+{ #category : '*Dolphin to Pharo' }
 ProtoObject class >> subclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames classInstanceVariableNames: civNames [
 
-	| newClass |
+	| builder |
 
-	newClass := self subclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames package: (RPackage currentDolphinPackage ifNil: [''] ifNotNil: [ :package | package name]).
-	
-	newClass class instanceVariableNames: civNames.
-	
-	^newClass
+	builder := self << aSymbol.
+	builder 
+		slots: (ivNames substrings collect: [ :each | each asSymbol]);
+		classSlots: (civNames substrings collect: [ :each | each asSymbol]);
+		sharedVariables: (ivNames substrings collect: [ :each | each asSymbol]);
+		package: (Package currentDolphinPackage ifNil: ['_UnpackagedPackage'] ifNotNil: [ :package | package name]).
+
+	^builder install
 ]

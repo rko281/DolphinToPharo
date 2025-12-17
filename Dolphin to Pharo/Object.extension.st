@@ -1,6 +1,6 @@
-Extension { #name : #Object }
+Extension { #name : 'Object' }
 
-{ #category : #'*Dolphin to Pharo' }
+{ #category : '*Dolphin to Pharo' }
 Object class >> variableByteSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames classInstanceVariableNames: civNames [
 
 	| newClass |
@@ -12,7 +12,7 @@ Object class >> variableByteSubclass: aSymbol instanceVariableNames: ivNames cla
 	^newClass
 ]
 
-{ #category : #'*Dolphin to Pharo' }
+{ #category : '*Dolphin to Pharo' }
 Object class >> variableSubclass: aSymbol instanceVariableNames: ivNames classVariableNames: cvNames poolDictionaries: pdNames classInstanceVariableNames: civNames [
 
 	| newClass |

@@ -2,38 +2,48 @@
 I represent a collection (e.g. of class names) belonging to a Dolphin Package.
 "
 Class {
-	#name : #DolphinPackageCollection,
-	#superclass : #Object,
+	#name : 'DolphinPackageCollection',
+	#superclass : 'Object',
 	#instVars : [
-		'package'
+		'package',
+		'items'
 	],
-	#category : #'Dolphin to Pharo'
+	#category : 'Dolphin to Pharo',
+	#package : 'Dolphin to Pharo'
 }
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DolphinPackageCollection class >> initialize [
 
 	self class environment at: #Package put: RPackage
 ]
 
-{ #category : #'class initialization' }
+{ #category : 'class initialization' }
 DolphinPackageCollection class >> uninitialize [
 
 	self class environment removeKey: #Package
 ]
 
-{ #category : #adding }
+{ #category : 'adding' }
 DolphinPackageCollection >> add: anObject [
 
-	self subclassResponsibility 
+	^items add: anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'initialization' }
+DolphinPackageCollection >> initialize [
+
+	super initialize.
+	items := OrderedCollection new.
+	DolphinCodeImporter current addToInstall: self
+]
+
+{ #category : 'accessing' }
 DolphinPackageCollection >> package [
 	^ package
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 DolphinPackageCollection >> package: anObject [
 	package := anObject
 ]
